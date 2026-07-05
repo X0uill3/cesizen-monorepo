@@ -32,7 +32,7 @@ app.use(cors({
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(new Error('CORS non autorisé pour cette origine'));
+            callback(null, false);
         }
     },
     credentials: true,
