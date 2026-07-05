@@ -1,0 +1,43 @@
+# Dépendances
+node_modules/
+
+# Variables d'environnement (CRITIQUE : ne jamais commiter)
+.env
+.env.local
+.env.production
+.env.staging
+*.env
+
+# Build outputs
+dist/
+build/
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Expo / React Native
+.expo/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# TypeScript
+*.tsbuildinfo
+
+# Fichiers binaires Bloc 2 (hors repo)
+*.pdf
+*.pptx
+*.docx

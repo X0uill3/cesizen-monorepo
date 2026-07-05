@@ -1,0 +1,71 @@
+name: "🐛 Rapport de bug"
+description: Signaler un dysfonctionnement de l'application CESIZen
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de remplir ce formulaire pour nous aider à reproduire et corriger le problème.
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Sévérité de l'incident
+      description: Quel est l'impact sur l'utilisation de l'application ?
+      options:
+        - "🔴 Bloquant — fonctionnalité principale inutilisable"
+        - "🟠 Majeur — dégradation significative"
+        - "🟡 Mineur — gêne légère, contournement possible"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: Module concerné
+      options:
+        - Authentification / Comptes utilisateurs
+        - Journal d'émotions (Tracker)
+        - Articles / Informations
+        - Diagnostic de stress
+        - Administration
+        - API / Backend
+        - Application mobile
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description du problème
+      placeholder: "Décrivez clairement ce qui ne fonctionne pas..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Étapes pour reproduire
+      placeholder: |
+        1. Se connecter avec un compte utilisateur
+        2. Accéder à la page Journal
+        3. Cliquer sur "Ajouter une entrée"
+        4. Observer l'erreur
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportement attendu
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environnement
+      placeholder: |
+        - Navigateur : Chrome 125
+        - OS : Windows 11
+        - URL : https://app.cesizen.fr

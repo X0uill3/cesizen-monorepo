@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+@theme {
+  --color-zen-sage: #8BA889;
+  --color-zen-cream: #F9F7F2;
+  --color-zen-sky: #AEC6CF;
+  --color-zen-dark: #2D3436;
+
+  --radius-zen: 24px;
+}

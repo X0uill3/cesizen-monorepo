@@ -1,0 +1,55 @@
+name: CI — Tests Backend
+
+on:
+  push:
+    branches: [main, develop, "feature/**", "fix/**", "hotfix/**"]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    name: Tests unitaires & intégration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Installation des dépendances
+        working-directory: backend
+        run: npm ci
+
+      - name: Vérification TypeScript
+        working-directory: backend
+        run: npx tsc --noEmit
+
+      - name: Tests unitaires
+        working-directory: backend
+        run: npm run test:unit
+        env:
+          NODE_ENV: test
+          MONGO_URI: mongodb://localhost:27017/cesizen_test
+          JWT_SECRET: ${{ secrets.JWT_SECRET_TEST || 'test_secret_ci_32_chars_minimum_ok' }}
+
+      - name: Tests d'intégration
+        working-directory: backend
+        run: npm run test:integration
+        env:
+          NODE_ENV: test
+          MONGO_URI: mongodb://localhost:27017/cesizen_test
+          JWT_SECRET: ${{ secrets.JWT_SECRET_TEST || 'test_secret_ci_32_chars_minimum_ok' }}
+
+      - name: Rapport de couverture
+        working-directory: backend
+        run: npm run test:coverage
+        env:
+          NODE_ENV: test
+          MONGO_URI: mongodb://localhost:27017/cesizen_test
+          JWT_SECRET: ${{ secrets.JWT_SECRET_TEST || 'test_secret_ci_32_chars_minimum_ok' }}

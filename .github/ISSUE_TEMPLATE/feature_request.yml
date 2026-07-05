@@ -1,0 +1,52 @@
+name: "✨ Demande d'évolution"
+description: Proposer une nouvelle fonctionnalité ou une amélioration pour CESIZen
+labels: ["enhancement", "triage"]
+body:
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priorité demandée
+      options:
+        - "🔴 Haute — impact fort sur les utilisateurs"
+        - "🟠 Moyenne — amélioration significative"
+        - "🟡 Basse — confort / cosmétique"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: Module concerné
+      options:
+        - Authentification / Comptes utilisateurs
+        - Journal d'émotions (Tracker)
+        - Articles / Informations
+        - Diagnostic de stress
+        - Administration
+        - Application mobile
+        - Infrastructure / Sécurité
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Contexte et besoin métier
+      placeholder: "En tant qu'utilisateur, je souhaite... afin de..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solution envisagée
+      placeholder: "Décrivez la solution que vous aimeriez voir implémentée."
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critères d'acceptation
+      placeholder: |
+        - [ ] L'utilisateur peut...
+        - [ ] L'administrateur peut...
+        - [ ] Les tests couvrent le cas nominal et les cas d'erreur
