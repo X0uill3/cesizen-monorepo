@@ -37,6 +37,9 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 
+# Credentials Azure (jamais commités)
+publish_profile.xml
+
 # Fichiers binaires Bloc 2 (hors repo)
 *.pdf
 *.pptx
