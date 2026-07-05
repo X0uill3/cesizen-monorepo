@@ -6,8 +6,7 @@ on:
 
 jobs:
   # ─────────────────────────────────────────────
-  # ÉTAPE 1 : Tests (le déploiement ne se lance
-  #           que si tous les tests passent)
+  # ÉTAPE 1 : Tests (bloquants avant tout déploiement)
   # ─────────────────────────────────────────────
   test:
     name: Vérification qualité avant déploiement
@@ -17,7 +16,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
           cache-dependency-path: backend/package-lock.json
 
@@ -27,7 +26,7 @@ jobs:
 
       - name: Vérification TypeScript
         working-directory: backend
-        run: npx tsc --noEmit
+        run: npx tsc --project tsconfig.build.json --noEmit
 
       - name: Tests unitaires et intégration
         working-directory: backend
@@ -51,7 +50,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
           cache-dependency-path: backend/package-lock.json
 
@@ -61,20 +60,20 @@ jobs:
 
       - name: Compilation TypeScript
         working-directory: backend
-        run: npx tsc
+        run: npx tsc --project tsconfig.build.json
 
       - name: Déploiement vers Azure App Service
         uses: azure/webapps-deploy@v3
         with:
-          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          app-name: cesizen-api
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: backend
 
   # ─────────────────────────────────────────────
-  # ÉTAPE 3 : Déploiement Frontend → Azure Static Web Apps
+  # ÉTAPE 3 : Déploiement Frontend → Vercel
   # ─────────────────────────────────────────────
   deploy-frontend:
-    name: Déploiement Frontend (Azure Static Web Apps)
+    name: Déploiement Frontend (Vercel)
     runs-on: ubuntu-latest
     needs: test
     environment: production
@@ -84,7 +83,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
           cache-dependency-path: frontend/package-lock.json
 
@@ -98,11 +97,11 @@ jobs:
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
-      - name: Déploiement vers Azure Static Web Apps
-        uses: Azure/static-web-apps-deploy@v1
+      - name: Déploiement vers Vercel
+        uses: amondnet/vercel-action@v25
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: upload
-          app_location: frontend
-          output_location: dist
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: frontend
+          vercel-args: "--prod"

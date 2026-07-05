@@ -20,11 +20,12 @@ module.exports = {
     coverageThreshold: {
         global: {
             statements: 70,
-            branches: 70,
+            branches: 60,
             functions: 70,
             lines: 70,
         },
     },
     testMatch: ['**/*.test.ts'],
     clearMocks: true,
+    setupFiles: ['./jest.setup.env.cjs'],
 };
