@@ -27,7 +27,7 @@ jobs:
 
       - name: Vérification TypeScript
         working-directory: backend
-        run: npx tsc --noEmit
+        run: npx tsc --project tsconfig.build.json --noEmit
 
       - name: Tests unitaires et intégration
         working-directory: backend

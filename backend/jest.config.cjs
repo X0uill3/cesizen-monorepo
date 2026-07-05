@@ -27,4 +27,5 @@ module.exports = {
     },
     testMatch: ['**/*.test.ts'],
     clearMocks: true,
+    setupFiles: ['./jest.setup.env.cjs'],
 };

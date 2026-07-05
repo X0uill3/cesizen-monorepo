@@ -3,18 +3,23 @@ import type { Request, Response, NextFunction } from 'express';
 import User from '../models/User.js';
 import { GlobalRole } from '../constants/roles.js';
 
-// Extension locale du type Request pour éviter le "any" et gagner des points en qualité
 interface AuthRequest extends Request {
     user?: any;
 }
+
+const getJwtSecret = (): string => {
+    const secret = process.env['JWT_SECRET'];
+    if (!secret) throw new Error('JWT_SECRET non défini');
+    return secret;
+};
 
 export const protect = async (req: AuthRequest, res: Response, next: NextFunction) => {
     let token;
 
     if (req.headers.authorization?.startsWith('Bearer')) {
         try {
-            token = req.headers.authorization.split(' ')[1];
-            const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
+            token = req.headers.authorization.split(' ')[1] as string;
+            const decoded: any = jwt.verify(token, getJwtSecret());
 
             // On injecte l'utilisateur (sans son mot de passe) dans la requête [cite: 183]
             req.user = await User.findById(decoded.id).select('-password');
@@ -42,8 +47,8 @@ export const softProtect = async (req: AuthRequest, res: Response, next: NextFun
 
     if (req.headers.authorization?.startsWith('Bearer')) {
         try {
-            token = req.headers.authorization.split(' ')[1];
-            const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
+            token = req.headers.authorization.split(' ')[1] as string;
+            const decoded: any = jwt.verify(token, getJwtSecret());
             req.user = await User.findById(decoded.id).select('-password');
 
             if (req.user && req.user.systemStatus === 'Disabled') {
