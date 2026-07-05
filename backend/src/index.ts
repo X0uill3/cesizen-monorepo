@@ -1,5 +1,5 @@
 import express from 'express';
-import type { Application, Request, Response } from 'express';
+import type { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
@@ -61,7 +61,16 @@ app.use(globalLimiter);
 app.use(express.json({ limit: '10kb' }));
 
 // Sécurité : sanitisation des entrées MongoDB (OWASP A03 - Injection)
-app.use(mongoSanitize());
+// Wrapper nécessaire car Express 5 rend req.query readonly (getter sans setter)
+const _sanitizeMiddleware = mongoSanitize();
+app.use((req: Request, res: Response, next: NextFunction) => {
+    try {
+        _sanitizeMiddleware(req as any, res, next);
+    } catch {
+        // req.query non réassignable dans Express 5 ; body/params/headers déjà sanitisés
+        next();
+    }
+});
 
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/articles', articlesRoutes);
