@@ -1,9 +1,10 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
+    "start": "node dist/index.js",
     "test": "jest",
     "test:unit": "jest src/tests/unit --coverage=false",
     "test:integration": "jest src/tests/integration --coverage=false",
