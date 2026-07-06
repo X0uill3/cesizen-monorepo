@@ -271,17 +271,6 @@ jobs:
         working-directory: backend
         run: npx typedoc --options typedoc.json
 
-      - name: Export Swagger JSON
-        working-directory: backend
-        run: |
-          node -e "
-          import('./src/config/swagger.js').then(m => {
-            const fs = require('fs');
-            fs.mkdirSync('../docs/swagger', { recursive: true });
-            fs.writeFileSync('../docs/swagger/openapi.json', JSON.stringify(m.swaggerSpec, null, 2));
-          });
-          "
-
       - name: Créer la page d'index de la doc
         run: |
           cat > docs/index.html << 'EOF'
