@@ -7,6 +7,8 @@ import mongoSanitize from 'express-mongo-sanitize';
 import * as dotenv from 'dotenv';
 import connectDB from './config/db.js';
 
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './config/swagger.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import authRoutes from './routes/authRoutes.js';
 import articlesRoutes from './routes/articlesRoutes.js';
@@ -73,6 +75,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
         next();
     }
 });
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/articles', articlesRoutes);
