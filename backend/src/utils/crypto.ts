@@ -1,4 +1,4 @@
-import { generateKeyPairSync, sign, verify } from 'crypto';
+import { generateKeyPairSync, sign, verify } from 'node:crypto';
 
 /**
  * Chiffrement asymétrique Ed25519 (RFC 8032)

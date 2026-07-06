@@ -34,7 +34,7 @@ const Analytics = () => {
 
         // 1. Extraire les dates uniques au format YYYY-MM-DD et trier du plus récent au plus ancien
         const dates = entries.map(e => new Date(e.date).toISOString().split('T')[0]);
-        const uniqueDates = Array.from(new Set(dates)).sort().reverse();
+        const uniqueDates = Array.from(new Set(dates)).sort((a, b) => b.localeCompare(a));
 
         const today = new Date().toISOString().split('T')[0];
         const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
