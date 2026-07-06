@@ -4,8 +4,26 @@ import { X, Send, Image as ImageIcon, Loader2 } from 'lucide-react';
 import api from '../api/api';
 // Importe tes catégories ici (adapte le chemin si besoin)
 import { ArticleCategory } from '../constants/categories';
+import { getErrorMessage } from '../utils/errors';
 
-const ArticleModal = ({ isOpen, onClose, article, onSuccess }: any) => {
+export interface Article {
+    _id: string;
+    title: string;
+    content: string;
+    category: string;
+    imageUrl?: string;
+    isActive?: boolean;
+    author?: { firstname: string; lastname: string };
+}
+
+interface ArticleModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    article: Article | null;
+    onSuccess: () => void;
+}
+
+const ArticleModal = ({ isOpen, onClose, article, onSuccess }: ArticleModalProps) => {
     // On initialise avec la première valeur de l'enum pour éviter les erreurs de validation
     const [formData, setFormData] = useState({
         title: '',
@@ -46,9 +64,10 @@ const ArticleModal = ({ isOpen, onClose, article, onSuccess }: any) => {
             }
             onSuccess();
             onClose();
-        } catch (err: any) {
-            console.error("Détails de l'erreur:", err.response?.data);
-            alert(`Erreur: ${err.response?.data?.message || "Impossible d'enregistrer l'article"}`);
+        } catch (err) {
+            const message = getErrorMessage(err, "Impossible d'enregistrer l'article");
+            console.error("Détails de l'erreur:", message);
+            alert(`Erreur: ${message}`);
         } finally {
             setLoading(false);
         }
@@ -97,7 +116,7 @@ const ArticleModal = ({ isOpen, onClose, article, onSuccess }: any) => {
                                         className="w-full bg-gray-50 border-none rounded-xl p-3 outline-none focus:ring-2 focus:ring-zen-sage/20 font-medium"
                                     >
                                         {/* On boucle sur les clés de ton enum ArticleCategory */}
-                                        {Object.values(ArticleCategory).map((cat: any) => (
+                                        {Object.values(ArticleCategory).map((cat: string) => (
                                             <option key={cat} value={cat}>
                                                 {cat.charAt(0) + cat.slice(1).toLowerCase()}
                                             </option>

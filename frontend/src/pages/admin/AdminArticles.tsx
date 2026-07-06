@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Edit2, Trash2, Eye, EyeOff, Loader2, BookOpen } from 'lucide-react';
+import { Plus, Edit2, Eye, EyeOff, Loader2, BookOpen } from 'lucide-react';
 import api from '../../api/api';
-import ArticleModal from '../../components/ArticleModal';
+import ArticleModal, { type Article } from '../../components/ArticleModal';
 
 const AdminArticles = () => {
-    const [articles, setArticles] = useState<any[]>([]);
+    const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedArticle, setSelectedArticle] = useState<any>(null);
+    const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
 
     useEffect(() => {
         fetchArticles();
@@ -21,7 +21,7 @@ const AdminArticles = () => {
         setLoading(false);
     };
 
-    const handleEdit = (article: any) => {
+    const handleEdit = (article: Article) => {
         setSelectedArticle(article);
         setIsModalOpen(true);
     };
@@ -37,12 +37,12 @@ const AdminArticles = () => {
             try {
                 await api.delete(`/articles/${id}`);
                 fetchArticles();
-            } catch (err) { alert("Erreur lors de la modification de l'article"); }
+            } catch { alert("Erreur lors de la modification de l'article"); }
         } else {
             try {
                 await api.patch(`/articles/${id}/activate`);
                 fetchArticles();
-            } catch (err) { alert("Erreur lors de la modification de l'article"); }
+            } catch { alert("Erreur lors de la modification de l'article"); }
         }
     };
 

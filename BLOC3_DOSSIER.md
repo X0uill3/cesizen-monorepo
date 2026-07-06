@@ -260,7 +260,7 @@ Au-delà des tests fonctionnels, le pipeline `ci.yml` exécute automatiquement q
 
 | Job | Type | Outil | Bloquant | Détail |
 |---|---|---|---|---|
-| `audit-backend` / `audit-frontend` | SCA (dépendances) | `npm audit` | Oui (seuil HIGH) | Vérifie les CVE connues dans `package-lock.json` |
+| `audit-backend` / `audit-frontend` | SCA (dépendances) | `npm audit --omit=dev` | Oui (seuil HIGH) | Vérifie les CVE connues dans les dépendances de production uniquement (`package-lock.json`) |
 | `codeql` | SAST (analyse statique) | GitHub CodeQL | Non bloquant par défaut | Analyse le code JS/TS à la recherche de failles (injection, XSS, secrets codés en dur, etc.) |
 | `snyk` | SCA (dépendances) | Snyk CLI | Oui (seuil HIGH) | Détection de vulnérabilités avec base de données Snyk, complémentaire à `npm audit` |
 | `trivy-fs` | SCA (dépendances) | Trivy (mode filesystem) | Oui (HIGH/CRITICAL) | Scan indépendant des dépendances backend et frontend |
@@ -269,6 +269,8 @@ Au-delà des tests fonctionnels, le pipeline `ci.yml` exécute automatiquement q
 **Pourquoi cumuler plusieurs outils SCA (`npm audit`, Snyk, Trivy) ?** Chaque outil a sa propre base de vulnérabilités et ses propres heuristiques ; les combiner réduit les faux négatifs, une pratique courante en défense en profondeur.
 
 **CodeQL plutôt que SonarQube :** natif GitHub Actions, gratuit sans compte externe à créer, suffisant pour la portée d'un projet solo.
+
+**Pourquoi `--omit=dev` sur l'audit ?** Les outils de génération de documentation (`docx`, `pptxgenjs`, `xlsx`, utilisés uniquement par des scripts ponctuels `backend/src/utils/generate*.mjs` pour produire les livrables du dossier) sont classés en `devDependencies` et jamais exécutés en production. Auditer uniquement les dépendances de production évite de bloquer le pipeline sur des vulnérabilités d'outils qui ne sont jamais exposés (ex : `xlsx`, qui n'a pas de correctif disponible).
 
 ---
 

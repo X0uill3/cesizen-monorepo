@@ -3,8 +3,20 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recha
 import { Loader2, TrendingUp } from 'lucide-react';
 import api from '../api/api';
 
+interface StatItem {
+    name: string;
+    value: number;
+    color: string;
+}
+
+interface RawStatItem {
+    _id: string;
+    count: number;
+    color?: string;
+}
+
 const WeeklyStats = () => {
-    const [data, setData] = useState([]);
+    const [data, setData] = useState<StatItem[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -12,7 +24,7 @@ const WeeklyStats = () => {
             try {
                 const res = await api.get('/diary/report?period=week');
                 // Ton backend renvoie : { data: { stats: [ { _id: "Joie", count: 5, color: "#..." }, ... ] } }
-                const formattedData = res.data.data.stats.map((item: any) => ({
+                const formattedData = res.data.data.stats.map((item: RawStatItem) => ({
                     name: item._id,
                     value: item.count,
                     color: item.color || '#94a3b8' // Couleur par défaut si absente
@@ -55,7 +67,7 @@ const WeeklyStats = () => {
                             dataKey="value"
                             stroke="none"
                         >
-                            {data.map((entry: any, index) => (
+                            {data.map((entry: StatItem, index) => (
                                 <Cell key={`cell-${index}`} fill={entry.color} />
                             ))}
                         </Pie>
@@ -68,7 +80,7 @@ const WeeklyStats = () => {
             </div>
 
             <p className="mt-4 text-[11px] text-center text-gray-400 uppercase tracking-widest font-bold">
-                Basé sur vos {data.reduce((acc, curr: any) => acc + curr.value, 0)} dernières notes
+                Basé sur vos {data.reduce((acc, curr: StatItem) => acc + curr.value, 0)} dernières notes
             </p>
         </div>
     );

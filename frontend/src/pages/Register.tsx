@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext'; // Import pour l'auto-login
 import api from '../api/api';
-import { Lock, Mail, User, Loader2, Calendar } from 'lucide-react';
+import { Lock, Mail, Loader2, Calendar } from 'lucide-react';
+import { getErrorMessage } from '../utils/errors';
 
 const Register = () => {
     const { login } = useAuth(); // Pour connecter l'utilisateur direct après inscription
@@ -33,8 +34,8 @@ const Register = () => {
             const { token, data } = response.data;
             login(data.user, token);
             navigate('/');
-        } catch (err: any) {
-            setError(err.response?.data?.message || "Erreur lors de la création du compte.");
+        } catch (err) {
+            setError(getErrorMessage(err, "Erreur lors de la création du compte."));
         } finally {
             setIsLoading(false);
         }

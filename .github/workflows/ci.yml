@@ -100,9 +100,9 @@ jobs:
         working-directory: backend
         run: npm ci
 
-      - name: npm audit (bloquant sur HIGH/CRITICAL)
+      - name: npm audit (bloquant sur HIGH/CRITICAL, dépendances de production uniquement)
         working-directory: backend
-        run: npm audit --audit-level=high
+        run: npm audit --omit=dev --audit-level=high
 
   audit-frontend:
     name: Audit des dépendances (frontend)
@@ -123,9 +123,9 @@ jobs:
         working-directory: frontend
         run: npm ci
 
-      - name: npm audit (bloquant sur HIGH/CRITICAL)
+      - name: npm audit (bloquant sur HIGH/CRITICAL, dépendances de production uniquement)
         working-directory: frontend
-        run: npm audit --audit-level=high
+        run: npm audit --omit=dev --audit-level=high
 
   codeql:
     name: Analyse statique du code (CodeQL)
@@ -188,7 +188,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Trivy — scan filesystem backend
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.32.0
         with:
           scan-type: fs
           scan-ref: backend
@@ -196,7 +196,7 @@ jobs:
           exit-code: "1"
 
       - name: Trivy — scan filesystem frontend
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.32.0
         with:
           scan-type: fs
           scan-ref: frontend

@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { History, Shield, User, FileText, AlertCircle, Loader2, Clock } from 'lucide-react';
+import { History, Shield, FileText, AlertCircle, Loader2, Clock } from 'lucide-react';
 import api from '../../api/api';
 
+interface LogEntry {
+    _id: string;
+    date: string;
+    action: string;
+    details: string;
+    admin?: { firstname: string; lastname: string };
+    article?: { title: string };
+    user?: { email: string };
+}
+
 const AdminLogs = () => {
-    const [logs, setLogs] = useState<any[]>([]);
+    const [logs, setLogs] = useState<LogEntry[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

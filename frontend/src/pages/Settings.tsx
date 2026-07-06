@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { User, Lock, Bell, Moon, Trash2, Save, Loader2, Camera } from 'lucide-react';
+import { User, Lock, Trash2, Save, Loader2, Camera } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/api';
 import { href } from 'react-router-dom';
+import { getErrorMessage } from '../utils/errors';
 
 const Settings = () => {
     const { user } = useAuth();
@@ -25,7 +26,7 @@ const Settings = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await api.patch('/users/updateMe', profileData);
+            await api.patch('/users/updateMe', profileData);
             alert("Profil mis à jour ! ✨");
         } catch (err) {
             console.error(err);
@@ -51,8 +52,8 @@ const Settings = () => {
 
             setPasswords({ current: '', new: '', confirm: '' });
             alert("Mot de passe mis à jour !");
-        } catch (err: any) {
-            alert(err.response?.data?.message || "Erreur lors du changement de mot de passe");
+        } catch (err) {
+            alert(getErrorMessage(err, "Erreur lors du changement de mot de passe"));
         } finally {
             setLoading(false);
         }
@@ -67,8 +68,8 @@ const Settings = () => {
             await api.delete('/users/deleteMe');
             alert("Votre compte a été supprimé. Nous sommes désolés de vous voir partir.");
             href('/');
-        } catch (err: any) {
-            alert(err.response?.data?.message || "Erreur lors de la suppression du compte");
+        } catch (err) {
+            alert(getErrorMessage(err, "Erreur lors de la suppression du compte"));
         } finally {
             setLoading(false);
         }

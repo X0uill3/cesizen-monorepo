@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save, Plus, Trash2, Loader2 } from 'lucide-react';
 import api from '../api/api';
+import { getErrorMessage } from '../utils/errors';
 
 interface Rule {
     minScore: number;
@@ -10,10 +11,18 @@ interface Rule {
     color: string;
 }
 
+export interface DiagnosticTest {
+    _id: string;
+    title: string;
+    description: string;
+    rules: Rule[];
+    isActive?: boolean;
+}
+
 interface TestModalProps {
     isOpen: boolean;
     onClose: () => void;
-    testData: any; // null si création, objet si édition
+    testData: DiagnosticTest | null; // null si création, objet si édition
     onSuccess: () => void;
 }
 
@@ -70,8 +79,8 @@ const TestModal = ({ isOpen, onClose, testData, onSuccess }: TestModalProps) => 
             }
             onSuccess();
             onClose();
-        } catch (err: any) {
-            setError(err.response?.data?.message || "Erreur lors de l'enregistrement.");
+        } catch (err) {
+            setError(getErrorMessage(err, "Erreur lors de l'enregistrement."));
         } finally {
             setLoading(false);
         }

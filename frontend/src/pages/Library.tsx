@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Clock, ChevronRight, User, Calendar, Loader2 } from 'lucide-react';
+import { Search, ChevronRight, User, Calendar, Loader2 } from 'lucide-react';
 import api from '../api/api';
 import { Link } from 'react-router-dom';
 

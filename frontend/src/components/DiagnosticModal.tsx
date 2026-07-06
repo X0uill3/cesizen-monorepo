@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save, Plus, Trash2, Loader2 } from 'lucide-react';
 import api from '../api/api';
+import { getErrorMessage } from '../utils/errors';
 
 interface Answer {
     label: string;
     points: number;
 }
 
+export interface DiagnosticQuestion {
+    _id: string;
+    text: string;
+    order: number;
+    answers: Answer[];
+    isActive?: boolean;
+}
+
 interface DiagnosticModalProps {
     isOpen: boolean;
     onClose: () => void;
-    question: any;
+    question: DiagnosticQuestion | null;
     testId: string;
     onSuccess: () => void;
 }
@@ -85,8 +94,8 @@ const DiagnosticModal = ({ isOpen, onClose, question, testId, onSuccess }: Diagn
             }
             onSuccess();
             onClose();
-        } catch (err: any) {
-            setError(err.response?.data?.message || "Erreur lors de l'enregistrement.");
+        } catch (err) {
+            setError(getErrorMessage(err, "Erreur lors de l'enregistrement."));
         } finally {
             setLoading(false);
         }

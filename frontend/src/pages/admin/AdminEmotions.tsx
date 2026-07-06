@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Tag, Layers, Loader2, Trash2, CheckCircle, Ban } from 'lucide-react';
+import { Plus, Loader2, Trash2, CheckCircle } from 'lucide-react';
 import api from '../../api/api';
 
+interface Emotion {
+    _id: string;
+    name: string;
+    color: string;
+    iconUrl?: string;
+    isActive: boolean;
+    baseEmotion?: { _id: string; name: string };
+}
+
 const AdminEmotions = () => {
-    const [emotions, setEmotions] = useState<any[]>([]);
-    const [details, setDetails] = useState<any[]>([]);
+    const [emotions, setEmotions] = useState<Emotion[]>([]);
+    const [details, setDetails] = useState<Emotion[]>([]);
     const [loading, setLoading] = useState(true);
     const [tab, setTab] = useState('lvl1'); // 'lvl1' ou 'lvl2'
 
@@ -40,7 +49,7 @@ const AdminEmotions = () => {
             setShowForm(false);
             setFormData({ name: '', color: '#94a3b8', iconUrl: '', baseEmotion: '' });
             fetchAll();
-        } catch (err) { alert("Erreur lors de la création"); }
+        } catch { alert("Erreur lors de la création"); }
     };
 
     const toggleStatus = async (id: string, isLvl1: boolean, currentStatus: boolean) => {
@@ -56,7 +65,7 @@ const AdminEmotions = () => {
             }
 
             fetchAll();
-        } catch (err) {
+        } catch {
             alert("Erreur lors du changement de statut");
         }
     };

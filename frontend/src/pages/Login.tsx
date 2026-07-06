@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import api from '../api/api';
 import { Lock, Mail, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { getErrorMessage } from '../utils/errors';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -31,8 +32,8 @@ const Login = () => {
 
             // 4. Redirection vers le dashboard
             navigate('/');
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Une erreur est survenue lors de la connexion.');
+        } catch (err) {
+            setError(getErrorMessage(err, 'Une erreur est survenue lors de la connexion.'));
             console.log(err);
         } finally {
             setIsLoading(false);

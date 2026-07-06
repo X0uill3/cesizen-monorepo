@@ -3,17 +3,33 @@ import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     PieChart, Pie, Cell, Legend
 } from 'recharts';
-import { TrendingUp, Calendar, Zap, Activity, Loader2, Download } from 'lucide-react';
+import { TrendingUp, Calendar, Zap, Activity, Loader2 } from 'lucide-react';
 import api from '../api/api';
 
+interface StatItem {
+    name: string;
+    value: number;
+    color: string;
+}
+
+interface RawStatItem {
+    _id: string;
+    count: number;
+    color: string;
+}
+
+interface DiaryEntry {
+    date: string;
+}
+
 const Analytics = () => {
-    const [stats, setStats] = useState<any[]>([]);
+    const [stats, setStats] = useState<StatItem[]>([]);
     const [streak, setStreak] = useState(0);
     const [loading, setLoading] = useState(true);
     const [period, setPeriod] = useState('month');
 
     // Fonction de calcul de la série (streak)
-    const calculateStreak = (entries: any[]) => {
+    const calculateStreak = (entries: DiaryEntry[]) => {
         if (!entries || entries.length === 0) return 0;
 
         // 1. Extraire les dates uniques au format YYYY-MM-DD et trier du plus récent au plus ancien
@@ -30,7 +46,7 @@ const Analytics = () => {
 
         let currentStreak = 0;
         // On commence la vérification soit à partir d'aujourd'hui (si présent), soit d'hier
-        let checkDate = new Date(uniqueDates.includes(today) ? today : yesterday);
+        const checkDate = new Date(uniqueDates.includes(today) ? today : yesterday);
 
         // 3. Boucler en remontant le temps tant qu'on trouve la date dans nos entrées
         while (true) {
@@ -56,7 +72,7 @@ const Analytics = () => {
                 ]);
 
                 // Formatage Stats
-                const formattedStats = statsRes.data.data.stats.map((s: any) => ({
+                const formattedStats = statsRes.data.data.stats.map((s: RawStatItem) => ({
                     name: s._id,
                     value: s.count,
                     color: s.color
@@ -168,7 +184,14 @@ const Analytics = () => {
     );
 };
 
-const StatCard = ({ icon, label, value, color }: any) => (
+interface StatCardProps {
+    icon: React.ReactNode;
+    label: string;
+    value: string | number;
+    color: string;
+}
+
+const StatCard = ({ icon, label, value, color }: StatCardProps) => (
     <div className="bg-white p-6 rounded-zen border border-gray-50 shadow-sm flex items-center gap-6">
         <div className={`w-14 h-14 rounded-2xl ${color} flex items-center justify-center transition-all`}>
             {icon}

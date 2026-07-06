@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { User, Shield, Ban, CheckCircle, Search, Loader2 } from 'lucide-react';
+import { Ban, CheckCircle, Loader2 } from 'lucide-react';
 import api from '../../api/api';
 
+interface UserRow {
+    _id: string;
+    firstname: string;
+    lastname: string;
+    email: string;
+    role: string;
+    systemStatus: string;
+}
+
 const AdminUsers = () => {
-    const [users, setUsers] = useState<any[]>([]);
+    const [users, setUsers] = useState<UserRow[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -25,14 +34,16 @@ const AdminUsers = () => {
             try {
                 await api.delete(`/users/${userId}`);
                 fetchUsers();
-            } catch (err) { alert("Erreur lors du changement de statut"); }
+            } catch { alert("Erreur lors du changement de statut"); }
         } else {
             try {
                 await api.patch(`/users/${userId}/reactivate`);
                 fetchUsers();
-            } catch (err) { alert("Erreur lors du changement de statut"); }
+            } catch { alert("Erreur lors du changement de statut"); }
         }
     };
+
+    if (loading) return <div className="h-screen flex items-center justify-center"><Loader2 className="animate-spin text-zen-sage" size={40} /></div>;
 
     return (
         <div className="space-y-8">

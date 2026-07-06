@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (savedUser) {
             try {
                 setUser(JSON.parse(savedUser));
-            } catch (e) {
+            } catch {
                 localStorage.removeItem('cesizen_user');
             }
         }
@@ -57,6 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components -- hook colocalisé avec son Provider, pattern standard
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if (!context) throw new Error("useAuth doit être utilisé dans un AuthProvider");

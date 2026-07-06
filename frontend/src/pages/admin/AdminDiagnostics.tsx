@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Edit2, Eye, EyeOff, Loader2, ArrowLeft, Settings, HelpCircle } from 'lucide-react';
+import { Plus, Edit2, Eye, EyeOff, Loader2, ArrowLeft, HelpCircle } from 'lucide-react';
 import api from '../../api/api';
-import DiagnosticModal from '../../components/DiagnosticModal'; // Modale pour les questions
-import TestModal from '../../components/TestModal';
+import DiagnosticModal, { type DiagnosticQuestion } from '../../components/DiagnosticModal'; // Modale pour les questions
+import TestModal, { type DiagnosticTest } from '../../components/TestModal';
 
 const AdminDiagnostics = () => {
     // --- ÉTATS ---
     const [loading, setLoading] = useState(true);
 
     // Niveau 1 : Les Tests
-    const [tests, setTests] = useState<any[]>([]);
+    const [tests, setTests] = useState<DiagnosticTest[]>([]);
     const [isTestModalOpen, setIsTestModalOpen] = useState(false);
-    const [selectedTestForm, setSelectedTestForm] = useState<any>(null);
+    const [selectedTestForm, setSelectedTestForm] = useState<DiagnosticTest | null>(null);
 
     // Niveau 2 : Les Questions (quand on rentre dans un test)
-    const [activeTest, setActiveTest] = useState<any>(null); // Le test en cours de visionnage
-    const [questions, setQuestions] = useState<any[]>([]);
+    const [activeTest, setActiveTest] = useState<DiagnosticTest | null>(null); // Le test en cours de visionnage
+    const [questions, setQuestions] = useState<DiagnosticQuestion[]>([]);
     const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
-    const [selectedQuestion, setSelectedQuestion] = useState<any>(null);
+    const [selectedQuestion, setSelectedQuestion] = useState<DiagnosticQuestion | null>(null);
 
     // --- CHARGEMENT INITIAL ---
     useEffect(() => {
@@ -38,7 +38,7 @@ const AdminDiagnostics = () => {
         try {
             await api.patch(`/diagnostic/admin/tests/${id}/toggle`);
             fetchTests();
-        } catch (err) { alert("Erreur lors de la modification du test"); }
+        } catch { alert("Erreur lors de la modification du test"); }
     };
 
     // --- API : QUESTIONS ---
@@ -52,7 +52,8 @@ const AdminDiagnostics = () => {
     };
 
     // --- NAVIGATION INTERNE ---
-    const openTestQuestions = (test: any) => {
+    const openTestQuestions = (test: DiagnosticTest) => {
+        if (!test._id) return;
         setActiveTest(test);
         fetchQuestionsForTest(test._id);
     };

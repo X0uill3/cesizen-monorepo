@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Clock, User, Calendar, Loader2 } from 'lucide-react';
+import { ArrowLeft, User, Calendar, Loader2 } from 'lucide-react';
 import api from '../api/api';
 
 interface Article {
