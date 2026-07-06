@@ -1,6 +1,8 @@
 {
-  "entryPoints": ["src/index.ts"],
+  "entryPoints": ["src"],
   "entryPointStrategy": "expand",
+  "tsconfig": "tsconfig.build.json",
+  "exclude": ["**/*.test.ts", "**/tests/**"],
   "out": "../docs/typedoc",
   "name": "CESIZen API — Documentation technique",
   "includeVersion": true,
