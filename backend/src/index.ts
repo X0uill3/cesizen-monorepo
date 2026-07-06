@@ -1,14 +1,3 @@
-// Application Insights doit être initialisé avant tout autre import (auto-instrumentation)
-import appInsights from 'applicationinsights';
-if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
-    appInsights
-        .setup()
-        .setAutoCollectRequests(true)
-        .setAutoCollectExceptions(true)
-        .setAutoCollectDependencies(true)
-        .start();
-}
-
 import express from 'express';
 import type { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
