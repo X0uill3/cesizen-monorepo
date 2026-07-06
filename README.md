@@ -18,12 +18,12 @@ CESIZen/
 
 | Couche | Technologie |
 |---|---|
-| Backend | Node.js 20, Express 5, TypeScript, Mongoose |
+| Backend | Node.js 22, Express 5, TypeScript, Mongoose |
 | Frontend | React 18, Vite, Tailwind CSS |
 | Mobile | React Native, Expo |
 | Base de données | MongoDB Atlas |
-| Hébergement | Azure App Service + Azure Static Web Apps |
-| CI/CD | GitHub Actions |
+| Hébergement | Azure App Service (backend) + Vercel (frontend) |
+| CI/CD | GitHub Actions (tests, audit, CodeQL, Snyk, Trivy, ZAP) |
 
 ## Lancer le projet en local
 

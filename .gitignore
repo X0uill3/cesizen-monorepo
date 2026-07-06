@@ -40,6 +40,9 @@ Thumbs.db
 # Credentials Azure (jamais commités)
 publish_profile.xml
 
+# Archives de déploiement générées localement
+*.zip
+
 # Fichiers binaires Bloc 2 (hors repo)
 *.pdf
 *.pptx

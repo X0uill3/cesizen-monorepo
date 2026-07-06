@@ -45,6 +45,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     environment: production
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
@@ -67,24 +70,58 @@ jobs:
         working-directory: backend
         run: npm prune --omit=dev
 
-      - name: Déploiement vers Azure (Kudu ZIP deploy)
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Déploiement vers Azure (az webapp up)
+        # Historique : azure/webapps-deploy@v2/v3 échouait ("Publish profile
+        # invalid", bug connu sur Linux) et le Kudu ZIP deploy via curl
+        # renvoyait HTTP 401 (Basic Auth désactivée par la politique de la
+        # subscription Azure for Students de CESI). az webapp up (auth ARM
+        # via azure/login) est la méthode qui fonctionne réellement.
+        working-directory: backend
         run: |
-          cd backend
-          zip -r ../deploy.zip . \
-            --exclude "src/*" \
-            --exclude "*.ts" \
-            --exclude "tsconfig*" \
-            --exclude ".env*" \
-            --exclude "jest*" \
-            --exclude "coverage/*" \
-            --exclude "*.test.*"
-          curl -s -w "\nHTTP %{http_code}" -X POST \
-            -u "${{ secrets.AZURE_KUDU_USER }}:${{ secrets.AZURE_KUDU_PASS }}" \
-            --data-binary @../deploy.zip \
-            "https://cesizen-api.scm.azurewebsites.net/api/zipdeploy"
+          az webapp up \
+            --name cesizen-api \
+            --resource-group rg-cesizen \
+            --runtime "NODE:22-lts" \
+            --sku F1
 
   # ─────────────────────────────────────────────
   # ÉTAPE 3 : Frontend → Vercel (intégration native GitHub)
   # Vercel déploie automatiquement sur push vers main via
   # son intégration GitHub — pas besoin d'une étape CI ici.
   # ─────────────────────────────────────────────
+
+  # ─────────────────────────────────────────────
+  # ÉTAPE 4 : Scan de sécurité dynamique (DAST) post-déploiement
+  # ─────────────────────────────────────────────
+  zap-scan:
+    name: Scan de sécurité dynamique (OWASP ZAP)
+    runs-on: ubuntu-latest
+    needs: deploy-backend
+    permissions:
+      contents: read
+      issues: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - name: backend
+            url: https://cesizen-api.azurewebsites.net
+          - name: frontend
+            url: https://cesizen-monorepo.vercel.app
+
+    steps:
+      - name: ZAP Baseline Scan (${{ matrix.target.name }})
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: ${{ matrix.target.url }}
+          issue_title: "ZAP Baseline — ${{ matrix.target.name }}"
+          fail_action: false
+          cmd_options: "-a"
