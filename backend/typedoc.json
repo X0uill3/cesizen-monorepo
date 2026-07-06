@@ -1,0 +1,13 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "entryPointStrategy": "expand",
+  "out": "../docs/typedoc",
+  "name": "CESIZen API — Documentation technique",
+  "includeVersion": true,
+  "readme": "none",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeExternals": true,
+  "plugin": [],
+  "theme": "default"
+}
