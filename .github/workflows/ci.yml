@@ -190,6 +190,25 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Installation des dépendances backend
+        working-directory: backend
+        run: npm ci
+
+      - name: Génération du rapport de couverture
+        working-directory: backend
+        run: npm run test:coverage
+        env:
+          NODE_ENV: test
+          MONGO_URI: mongodb://localhost:27017/cesizen_test
+          JWT_SECRET: ${{ secrets.JWT_SECRET_TEST || 'test_secret_ci_32_chars_minimum_ok' }}
+
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:

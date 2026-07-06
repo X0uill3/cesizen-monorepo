@@ -1,3 +1,4 @@
+import { randomBytes } from 'crypto';
 import type { Request, Response } from 'express';
 import User from '../models/User.js';
 import { saveLog } from '../utils/logger.js';
@@ -18,7 +19,7 @@ const getOrCreateGhostAccount = async () => {
     if (!ghost) {
         ghost = await User.create({
             email: GHOST_EMAIL,
-            password: Math.random().toString(36).slice(-10),
+            password: randomBytes(16).toString('hex'),
             firstname: 'Compte',
             lastname: 'Supprimé',
             role: GlobalRole.USER,
