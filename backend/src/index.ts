@@ -7,6 +7,7 @@ import mongoSanitize from 'express-mongo-sanitize';
 import * as dotenv from 'dotenv';
 import connectDB from './config/db.js';
 
+import { requestLogger } from './middleware/requestLogger.js';
 import authRoutes from './routes/authRoutes.js';
 import articlesRoutes from './routes/articlesRoutes.js';
 import diaryRoutes from './routes/diaryRoutes.js';
@@ -58,6 +59,7 @@ const authLimiter = rateLimit({
 });
 
 app.use(globalLimiter);
+app.use(requestLogger);
 app.use(express.json({ limit: '10kb' }));
 
 // Sécurité : sanitisation des entrées MongoDB (OWASP A03 - Injection)
