@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, Schema } from "mongoose";
+import mongoose, { Document, Model } from "mongoose";
 import bcrypt from "bcryptjs";
 import { GlobalRole } from '../constants/roles.js'; // On déplace l'enum ici
 
@@ -45,7 +45,6 @@ UserSchema.pre<IUser>("save", async function (next) {
     if (!this.isModified("password")) return;
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
-    return;
 });
 
 // Méthode de comparaison pour le Login

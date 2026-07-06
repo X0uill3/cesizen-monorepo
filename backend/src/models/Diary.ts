@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, type Model } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IDiary extends Document {
     user: mongoose.Types.ObjectId;

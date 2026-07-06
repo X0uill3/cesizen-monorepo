@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, type Model } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IEmotionDetails extends Document {
     name: string;

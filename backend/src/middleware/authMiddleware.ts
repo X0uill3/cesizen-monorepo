@@ -35,7 +35,7 @@ export const protect = async (req: AuthRequest, res: Response, next: NextFunctio
             }
 
             next();
-        } catch (error) {
+        } catch (_error) {
             res.status(401).json({ message: "Non autorisé, token invalide" });
         }
     } else {
@@ -52,10 +52,10 @@ export const softProtect = async (req: AuthRequest, res: Response, next: NextFun
             const decoded: any = jwt.verify(token, getJwtSecret());
             req.user = await User.findById(decoded.id).select('-password');
 
-            if (req.user && req.user.systemStatus === 'Disabled') {
+            if (req.user?.systemStatus === 'Disabled') {
                 return res.status(403).json({ message: "Compte désactivé" });
             }
-        } catch (error) {
+        } catch (_error) {
             // En cas d'erreur de token (invalide, expiré), on traite comme un invité
             req.user = { role: GlobalRole.GUEST };
         }
