@@ -22,6 +22,9 @@ dotenv.config();
 
 const app: Application = express();
 
+// Azure App Service place un reverse proxy devant l'app (X-Forwarded-For)
+app.set('trust proxy', 1);
+
 // Sécurité : en-têtes HTTP sécurisés (OWASP A05 - Security Misconfiguration)
 app.use(helmet());
 
