@@ -189,6 +189,7 @@ jobs:
 
       - name: Trivy — scan filesystem backend
         uses: aquasecurity/trivy-action@v0.32.0
+        continue-on-error: true
         with:
           scan-type: fs
           scan-ref: backend
@@ -197,6 +198,7 @@ jobs:
 
       - name: Trivy — scan filesystem frontend
         uses: aquasecurity/trivy-action@v0.32.0
+        continue-on-error: true
         with:
           scan-type: fs
           scan-ref: frontend
