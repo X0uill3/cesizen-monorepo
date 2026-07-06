@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import jwt, { type SignOptions } from 'jsonwebtoken';
 import User from '../models/User.js';
 import { GlobalRole } from '../constants/roles.js';
+import { logAuthSuccess, logAuthFailure } from '../utils/securityLogger.js';
 
 // Fonction pour générer le Token (Sécurité demandée)
 const signToken = (id: string): string => {
@@ -59,15 +60,20 @@ export const login = async (req: Request, res: Response) => {
         // 2. Vérifier si l'utilisateur existe ET si le mot de passe est correct
         const user = await User.findOne({ email }).select('+password');
 
+        const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+
         if (!user || !(await user.comparePassword(password))) {
+            logAuthFailure(email, ip, 'Identifiants invalides');
             return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
         }
 
-        // 3. Vérifier si le compte n'est pas désactivé (Exigence Admin) 
+        // 3. Vérifier si le compte n'est pas désactivé (Exigence Admin)
         if (user.systemStatus === 'Disabled') {
+            logAuthFailure(email, ip, 'Compte désactivé');
             return res.status(403).json({ message: 'Ce compte a été désactivé par un administrateur' });
         }
 
+        logAuthSuccess(user._id.toString(), email, ip);
         const token = signToken(user._id.toString());
         const userResponse = user.toObject();
         delete (userResponse as any).password;

@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import type { Request, Response, NextFunction } from 'express';
 import User from '../models/User.js';
 import { GlobalRole } from '../constants/roles.js';
+import { logAccessDenied } from '../utils/securityLogger.js';
 
 interface AuthRequest extends Request {
     user?: any;
@@ -69,6 +70,11 @@ export const softProtect = async (req: AuthRequest, res: Response, next: NextFun
 export const checkRole = (allowedRoles: GlobalRole[]) => {
     return (req: AuthRequest, res: Response, next: NextFunction) => {
         if (!allowedRoles.includes(req.user.role)) {
+            logAccessDenied(
+                req.user?.id,
+                req.path,
+                req.ip ?? req.socket?.remoteAddress ?? 'unknown',
+            );
             return res.status(403).json({
                 message: `Accès refusé. Rôles autorisés: ${allowedRoles.join(', ')}`
             });
