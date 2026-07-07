@@ -39,7 +39,7 @@ jobs:
 
   # ─────────────────────────────────────────────
   # ÉTAPE 2 : Déploiement Backend → Azure App Service
-  # Note : azure/login@v2 requiert un Service Principal Azure AD
+  # Note : azure/login@v3 requiert un Service Principal Azure AD
   # (AZURE_CLIENT_ID / TENANT_ID / SUBSCRIPTION_ID) qui ne peut pas
   # être créé sur la subscription Azure for Students de CESI.
   # Le déploiement manuel se fait via : az webapp up --name cesizen-api
@@ -76,7 +76,7 @@ jobs:
         run: npm prune --omit=dev
 
       - name: Azure Login
-        uses: azure/login@v2
+        uses: azure/login@v3
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
