@@ -130,3 +130,4 @@ jobs:
           issue_title: "ZAP Full Scan — ${{ matrix.target.name }}"
           artifact_name: "zap-report-${{ matrix.target.name }}"
           fail_action: false
+          create_issue: false
