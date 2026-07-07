@@ -294,4 +294,4 @@ jobs:
           path: docs/
 
       - name: Déploiement GitHub Pages
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
