@@ -9,6 +9,14 @@ updates:
     labels:
       - "chore"
       - "backend"
+    groups:
+      jest:
+        patterns:
+          - "jest"
+          - "jest-*"
+          - "@jest/*"
+          - "ts-jest"
+          - "@types/jest"
 
   - package-ecosystem: "npm"
     directory: "/frontend"
