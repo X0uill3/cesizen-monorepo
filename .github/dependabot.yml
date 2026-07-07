@@ -9,6 +9,10 @@ updates:
     labels:
       - "chore"
       - "backend"
+    ignore:
+      # @types/node doit rester aligné sur Node.js 22 LTS utilisé en prod
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
     groups:
       jest:
         patterns:
@@ -27,6 +31,18 @@ updates:
     labels:
       - "chore"
       - "frontend"
+    ignore:
+      # vite 8 incompatible avec @vitejs/plugin-react-swc qui supporte max vite 7
+      - dependency-name: "vite"
+        update-types: ["version-update:semver-major"]
+      # @eslint/js 10 est une version majeure à évaluer manuellement
+      - dependency-name: "@eslint/js"
+        update-types: ["version-update:semver-major"]
+    groups:
+      vite:
+        patterns:
+          - "vite"
+          - "@vitejs/*"
 
   - package-ecosystem: "npm"
     directory: "/CESIZen-Mobile"
